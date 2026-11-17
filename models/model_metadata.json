@@ -1,0 +1,158 @@
+{
+  "project": "SafeDrive AI",
+  "version": "1.0.0",
+  "trained_at": "2026-11-17T05:43:45.728420+00:00",
+  "dataset_path": "data\\processed\\safedrive_accident_data.csv",
+  "dataset": {
+    "total_records": 6000,
+    "total_locations": 12,
+    "date_range": {
+      "from": "2024-01-01",
+      "to": "2025-12-30"
+    },
+    "risk_distribution": {
+      "Low": 3293,
+      "Medium": 1688,
+      "High": 1019
+    },
+    "weather_distribution": {
+      "Clear": 2530,
+      "Cloudy": 1312,
+      "Rain": 1116,
+      "Fog": 666,
+      "Snow": 376
+    },
+    "road_condition_distribution": {
+      "Dry": 4176,
+      "Wet": 1238,
+      "Flooded": 315,
+      "Icy": 271
+    },
+    "location_distribution": {
+      "Satara–Kolhapur Road (NH-166)": 546,
+      "Vaduj–Satara Road": 531,
+      "Phaltan Road": 523,
+      "Satara City – Powar Peth": 509,
+      "Karad–Satara Road": 508,
+      "Akluj–Satara Road": 506,
+      "Wai–Satara Road": 505,
+      "Mahabaleshwar Ghat Section": 489,
+      "Shiroli Phata Junction": 478,
+      "Medha Ghat Curve": 472,
+      "Koregaon Road": 470,
+      "Satara–Pune Highway (NH-48)": 463
+    },
+    "averages": {
+      "hour": 11.41,
+      "visibility_km": 6.73,
+      "traffic_density": 50.18,
+      "avg_speed_kmph": 39.32,
+      "speed_limit_kmph": 69.29,
+      "accident_history_5yr": 11.02,
+      "vehicle_count": 450.59
+    }
+  },
+  "best_model": "Logistic Regression",
+  "model_comparison": {
+    "Decision Tree": {
+      "accuracy": 0.7192,
+      "precision": 0.6817,
+      "recall": 0.6615,
+      "f1": 0.6703,
+      "roc_auc": 0.8497
+    },
+    "Random Forest": {
+      "accuracy": 0.7483,
+      "precision": 0.7123,
+      "recall": 0.7196,
+      "f1": 0.7156,
+      "roc_auc": 0.8896
+    },
+    "Logistic Regression": {
+      "accuracy": 0.7525,
+      "precision": 0.7231,
+      "recall": 0.7396,
+      "f1": 0.7295,
+      "roc_auc": 0.898
+    },
+    "Gradient Boosting": {
+      "accuracy": 0.7533,
+      "precision": 0.7196,
+      "recall": 0.6995,
+      "f1": 0.7084,
+      "roc_auc": 0.8971
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "visibility_km",
+      "importance": 0.16103
+    },
+    {
+      "feature": "weather",
+      "importance": 0.1362
+    },
+    {
+      "feature": "road_condition",
+      "importance": 0.0823
+    },
+    {
+      "feature": "lighting",
+      "importance": 0.05893
+    },
+    {
+      "feature": "accident_history_5yr",
+      "importance": 0.03709
+    },
+    {
+      "feature": "traffic_density",
+      "importance": 0.02334
+    },
+    {
+      "feature": "speed_limit_kmph",
+      "importance": 0.00503
+    },
+    {
+      "feature": "road_type",
+      "importance": 0.00175
+    },
+    {
+      "feature": "vehicle_count",
+      "importance": 0.0004
+    },
+    {
+      "feature": "avg_speed_kmph",
+      "importance": -0.00027
+    },
+    {
+      "feature": "hour",
+      "importance": -0.00211
+    }
+  ],
+  "features": [
+    "hour",
+    "visibility_km",
+    "traffic_density",
+    "avg_speed_kmph",
+    "speed_limit_kmph",
+    "accident_history_5yr",
+    "vehicle_count",
+    "weather",
+    "road_condition",
+    "road_type",
+    "lighting"
+  ],
+  "classes": [
+    "Low",
+    "Medium",
+    "High"
+  ],
+  "class_mapping": {
+    "Low": 0,
+    "Medium": 1,
+    "High": 2
+  },
+  "train_size": 4800,
+  "test_size": 1200,
+  "random_state": 42
+}

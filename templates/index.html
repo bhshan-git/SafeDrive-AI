@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SafeDrive AI - AI-Powered Road Accident Risk Prediction and Prevention System" />
+  <title>SafeDrive AI · Road Accident Risk Prediction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar">
+    <a class="brand" href="#top">
+      <span class="brand-icon">◈</span>
+      <span>SafeDrive<span class="brand-accent">AI</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#pipeline">How it works</a>
+      <a href="#predictor">Predictor</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#risk-map">Risk Map</a>
+    </div>
+    <span class="nav-status" id="navStatus"><span class="status-dot"></span> Connecting…</span>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <header class="hero" id="top">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="eyebrow">AI &amp; DATA SCIENCE · ACADEMIC PROTOTYPE · 2026–27</div>
+      <h1>AI-Powered Road Accident<br /><span>Risk Prediction &amp; Prevention</span></h1>
+      <p class="hero-sub">
+        SafeDrive AI analyses traffic, weather, road and historical accident data to estimate
+        accident risk, highlight dangerous locations and deliver timely safety recommendations.
+      </p>
+      <div class="sdg-row">
+        <span class="sdg-chip">SDG 3 · Good Health</span>
+        <span class="sdg-chip">SDG 9 · Innovation</span>
+        <span class="sdg-chip">SDG 11 · Sustainable Cities</span>
+        <span class="sdg-chip">SDG 4 · Quality Education</span>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#predictor">Try the Predictor →</a>
+        <a class="btn btn-ghost" href="#analytics">View Analytics</a>
+      </div>
+      <div class="stat-grid" id="statGrid">
+        <div class="stat-card"><div class="stat-value" id="statRecords">—</div><div class="stat-label">Records analysed</div></div>
+        <div class="stat-card"><div class="stat-value" id="statLocations">—</div><div class="stat-label">Road segments</div></div>
+        <div class="stat-card"><div class="stat-value" id="statAccuracy">—</div><div class="stat-label">Model accuracy</div></div>
+        <div class="stat-card"><div class="stat-value" id="statAuc">—</div><div class="stat-label">ROC-AUC score</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ================= BLOCK DIAGRAM ================= -->
+    <section id="pipeline" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">SYSTEM OVERVIEW</div>
+          <h2>From raw data to early warning</h2>
+          <p class="section-sub">The five stages of the SafeDrive AI pipeline, straight from the project synopsis.</p>
+        </div>
+      </div>
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="step-icon">▦</div>
+          <div class="step-num">01</div>
+          <h3>Data Input</h3>
+          <p>Accident, traffic, weather and road data</p>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-icon">⚙</div>
+          <div class="step-num">02</div>
+          <h3>Preprocessing</h3>
+          <p>Cleaning, missing-value handling and feature preparation</p>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step featured">
+          <div class="step-icon">◈</div>
+          <div class="step-num">03</div>
+          <h3>AI / ML Model</h3>
+          <p>Training and risk estimation</p>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-icon">⚑</div>
+          <div class="step-num">04</div>
+          <h3>Risk Classification</h3>
+          <p>Low / Medium / High estimated risk</p>
+        </div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">
+          <div class="step-icon">▤</div>
+          <div class="step-num">05</div>
+          <h3>Result Display</h3>
+          <p>Dashboard, charts, maps and safety recommendations</p>
+        </div>
+      </div>
+      <p class="disclaimer">
+        ⓘ Outputs are <strong>risk estimates, not certainties</strong>. The system is intended to support —
+        not replace — the judgement of traffic authorities and road users.
+      </p>
+    </section>
+
+    <!-- ================= PREDICTOR ================= -->
+    <section id="predictor" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">LIVE INFERENCE</div>
+          <h2>Risk Predictor</h2>
+          <p class="section-sub">Adjust the road conditions below and see the model's estimate instantly.</p>
+        </div>
+        <div class="scenario-buttons">
+          <button class="chip-btn" data-scenario="clear">☀ Clear day</button>
+          <button class="chip-btn" data-scenario="monsoon">☂ Monsoon night</button>
+          <button class="chip-btn" data-scenario="fog">≋ Foggy highway</button>
+        </div>
+      </div>
+
+      <div class="predictor-grid">
+        <!-- Input form -->
+        <form class="panel form-panel" id="predictForm">
+          <div class="panel-title">Observation details</div>
+
+          <label class="field">
+            <span>Road segment</span>
+            <select id="location" name="location"><option value="">— Select a road segment —</option></select>
+          </label>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Hour of day <b id="hourVal">12</b></span>
+              <input type="range" id="hour" name="hour" min="0" max="23" value="12" />
+            </label>
+            <label class="field">
+              <span>Visibility (km) <b id="visibilityVal">9.0</b></span>
+              <input type="range" id="visibility_km" name="visibility_km" min="0.2" max="10" step="0.1" value="9" />
+            </label>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Weather</span>
+              <select id="weather" name="weather">
+                <option>Clear</option><option>Cloudy</option><option>Rain</option><option>Fog</option><option>Snow</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Road condition</span>
+              <select id="road_condition" name="road_condition">
+                <option>Dry</option><option>Wet</option><option>Icy</option><option>Flooded</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Road type</span>
+              <select id="road_type" name="road_type">
+                <option>Urban</option><option>Highway</option><option>Rural</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Lighting</span>
+              <select id="lighting" name="lighting">
+                <option>Daylight</option><option>Streetlights</option><option>Dark</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Traffic density (%) <b id="trafficVal">40</b></span>
+              <input type="range" id="traffic_density" name="traffic_density" min="0" max="100" value="40" />
+            </label>
+            <label class="field">
+              <span>Avg speed (km/h) <b id="speedVal">55</b></span>
+              <input type="range" id="avg_speed_kmph" name="avg_speed_kmph" min="10" max="130" value="55" />
+            </label>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Speed limit (km/h) <b id="limitVal">60</b></span>
+              <input type="range" id="speed_limit_kmph" name="speed_limit_kmph" min="30" max="100" step="10" value="60" />
+            </label>
+            <label class="field">
+              <span>Accidents in last 5 yrs <b id="historyVal">3</b></span>
+              <input type="range" id="accident_history_5yr" name="accident_history_5yr" min="0" max="40" value="3" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Vehicle count</span>
+            <input type="number" id="vehicle_count" name="vehicle_count" min="0" max="5000" value="300" />
+          </label>
+
+          <button class="btn btn-primary btn-block" type="submit" id="predictBtn">⚡ Predict Accident Risk</button>
+        </form>
+
+        <!-- Result -->
+        <div class="panel result-panel" id="resultPanel">
+          <div class="empty-result" id="emptyResult">
+            <div class="empty-icon">◎</div>
+            <h3>No prediction yet</h3>
+            <p>Set the conditions on the left and press <strong>Predict Accident Risk</strong> to see the estimated risk, key factors and safety advice.</p>
+          </div>
+
+          <div class="result-content hidden" id="resultContent">
+            <div class="result-top">
+              <div>
+                <div class="panel-title">Estimated risk</div>
+                <div class="risk-badge" id="riskBadge">—</div>
+              </div>
+              <div class="risk-score-ring">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+                  <circle class="ring-fg" id="ringFg" cx="60" cy="60" r="52"></circle>
+                </svg>
+                <div class="ring-label"><span id="riskScore">0</span><small>risk score</small></div>
+              </div>
+            </div>
+
+            <div class="prob-block">
+              <div class="panel-title tiny">Prediction confidence</div>
+              <div class="prob-row"><span class="prob-label low">Low</span><div class="prob-track"><div class="prob-fill" id="probLow"></div></div><span class="prob-val" id="probLowVal">0%</span></div>
+              <div class="prob-row"><span class="prob-label medium">Medium</span><div class="prob-track"><div class="prob-fill" id="probMedium"></div></div><span class="prob-val" id="probMediumVal">0%</span></div>
+              <div class="prob-row"><span class="prob-label high">High</span><div class="prob-track"><div class="prob-fill" id="probHigh"></div></div><span class="prob-val" id="probHighVal">0%</span></div>
+            </div>
+
+            <div class="result-section">
+              <div class="panel-title tiny">Key contributing factors</div>
+              <div class="factor-list" id="factorList"></div>
+            </div>
+
+            <div class="result-section">
+              <div class="panel-title tiny">Safety recommendations</div>
+              <ul class="recommendation-list" id="recommendationList"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ANALYTICS ================= -->
+    <section id="analytics" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">MODEL &amp; DATA INSIGHTS</div>
+          <h2>Dashboard Analytics</h2>
+          <p class="section-sub">Model performance, risk distribution and the factors that matter most.</p>
+        </div>
+        <span class="best-model-pill" id="bestModelPill">Loading model…</span>
+      </div>
+      <div class="chart-grid">
+        <div class="panel chart-card"><div class="panel-title">Risk distribution</div><canvas id="riskChart"></canvas></div>
+        <div class="panel chart-card"><div class="panel-title">Model comparison (F1)</div><canvas id="modelChart"></canvas></div>
+        <div class="panel chart-card"><div class="panel-title">Feature importance</div><canvas id="importanceChart"></canvas></div>
+        <div class="panel chart-card"><div class="panel-title">Observations by weather</div><canvas id="weatherChart"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ================= RISK MAP ================= -->
+    <section id="risk-map" class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">ACCIDENT-PRONE ZONES</div>
+          <h2>High-Risk Road Segments</h2>
+          <p class="section-sub">Historical risk aggregated across 12 road segments in and around Satara district.</p>
+        </div>
+      </div>
+      <div class="map-grid">
+        <div class="panel map-panel"><div id="riskMap"></div></div>
+        <div class="panel risk-list-panel">
+          <div class="panel-title">Segments ranked by risk</div>
+          <div class="risk-list" id="riskList"><div class="muted">Loading…</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SDG / ABOUT ================= -->
+    <section class="section about-section">
+      <div class="panel about-panel">
+        <div>
+          <div class="section-kicker">PURPOSE</div>
+          <h2>Built for safer roads and better learning</h2>
+          <p>
+            SafeDrive AI is an educational prototype that demonstrates how data-driven technology can
+            support preventive road-safety planning — from identifying black spots to generating
+            actionable warnings for drivers and traffic authorities.
+          </p>
+        </div>
+        <div class="about-tags">
+          <span>Python</span><span>scikit-learn</span><span>pandas</span><span>Flask</span>
+          <span>Chart.js</span><span>Leaflet</span><span>Machine Learning</span><span>Data Analytics</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><strong>SafeDrive AI</strong> · AI-Powered Road Accident Risk Prediction and Prevention System</div>
+      <div>Dept. of AI &amp; DS Engineering · YSPM's Yashoda Technical Campus, Satara · 2026–27</div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
