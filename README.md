@@ -4,7 +4,7 @@
 
 An end-to-end Machine Learning web application that analyses road, traffic, weather and historical accident data to estimate accident risk, classify it as **Low / Medium / High**, and present actionable safety recommendations on an interactive dashboard with charts and a risk map.
 
-**Live Streamlit demo:** https://safedrive-ai.streamlit.app
+**Live Streamlit demo:** https://aisafedrive.streamlit.app
 
 Two interfaces are provided from the same codebase:
 
