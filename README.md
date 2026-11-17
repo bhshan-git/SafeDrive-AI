@@ -4,6 +4,13 @@
 
 An end-to-end Machine Learning web application that analyses road, traffic, weather and historical accident data to estimate accident risk, classify it as **Low / Medium / High**, and present actionable safety recommendations on an interactive dashboard with charts and a risk map.
 
+**Live Streamlit demo:** https://safedrive-ai.streamlit.app
+
+Two interfaces are provided from the same codebase:
+
+- **Streamlit dashboard** (`streamlit_app.py`) — deployed on Streamlit Cloud.
+- **Flask dashboard + REST API** (`run.py` + `src/api.py`) — for local development and API integrations.
+
 > Academic prototype · Department of AI & DS Engineering · YSPM's Yashoda Technical Campus, Satara · 2026–27
 
 ---
@@ -108,6 +115,9 @@ SafeDrive-AI/
 │   ├── data_preprocessing.py             # cleaning + sklearn preprocessor
 │   ├── recommendation.py                 # safety advice + key factors
 │   └── api.py                            # Flask app + REST endpoints
+├── streamlit_app.py                      # Streamlit Cloud dashboard
+├── .streamlit/config.toml                # Streamlit theme
+├── runtime.txt                           # Python 3.12 for Streamlit Cloud
 ├── static/
 │   ├── css/style.css
 │   └── js/app.js
@@ -147,13 +157,23 @@ pip install -r requirements.txt
 
 ### 3. Run the app
 
-The generated dataset and trained model are already committed, so you can start immediately:
+The generated dataset and trained model are already committed, so you can start immediately.
+
+**Streamlit dashboard (same UI as the live demo):**
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Open **http://localhost:8501**.
+
+**Flask dashboard + REST API:**
 
 ```bash
 python run.py
 ```
 
-Open **http://127.0.0.1:5000** in your browser.
+Open **http://127.0.0.1:5000**.
 
 ### 4. (Optional) Rebuild data and model from scratch
 
@@ -270,8 +290,8 @@ Expected: `18 passed`.
 
 ## 🛠 Tech Stack
 
-**Backend:** Python, Flask, scikit-learn, pandas, NumPy, joblib
-**Frontend:** HTML5, CSS3, JavaScript, Chart.js, Leaflet + OpenStreetMap
+**Backend / ML:** Python, Flask, Streamlit, scikit-learn, pandas, NumPy, joblib, Matplotlib
+**Frontend:** HTML5, CSS3, JavaScript, Chart.js, Leaflet + OpenStreetMap (Flask UI); Streamlit widgets (Streamlit UI)
 **Tooling:** pytest, Git/GitHub
 
 ## 📚 References
